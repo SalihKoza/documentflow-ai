@@ -1,0 +1,34 @@
+# Geliştirme ortamı için PostgreSQL (D-010).
+# Docker yalnızca veritabanı ortamını izole ve tekrarlanabilir hale getirmek
+# için kullanılır. Backend bu aşamada container'lanmaz; host üzerinde çalışır.
+#
+# Değerler proje kökündeki `.env` dosyasından okunur (bkz. `.env.example`).
+# Docker Compose, aynı dizindeki `.env` dosyasını otomatik olarak değişken
+# ikamesi için kullanır.
+#
+# Kullanım (proje kökünde):
+#   docker compose up -d
+#
+# NOT: Buradaki kullanıcı adı/parola yalnızca yerel geliştirme içindir; üretim
+# ortamı sırları burada tutulmaz.
+
+services:
+  db:
+    image: postgres:16
+    container_name: documentflow-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-documentflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-documentflow_local}
+      POSTGRES_DB: ${POSTGRES_DB:-documentflow}
+    ports:
+      - "5432:5432"
+    volumes:
+      - documentflow_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-documentflow} -d ${POSTGRES_DB:-documentflow}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  documentflow_pgdata:

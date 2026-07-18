@@ -1,0 +1,51 @@
+[project]
+name = "documentflow"
+version = "0.1.0"
+description = "DocumentFlow AI backend — fatura ingestion, extraction, validation ve evaluation için API."
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "sqlalchemy>=2.0",
+    "alembic>=1.13",
+    "psycopg[binary]>=3.2",
+    "pydantic-settings>=2.4",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "httpx>=0.27",
+    "ruff>=0.6",
+    "mypy>=1.11",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/documentflow"]
+
+[tool.ruff]
+src = ["src", "tests"]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+# Sade başlangıç kural seti: pycodestyle (E), pyflakes (F), isort (I),
+# pyupgrade (UP), flake8-bugbear (B).
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+# D-009: başlangıçta esnek. Yeni proje kodunda tip disiplini korunur; üçüncü
+# taraf kütüphaneler için gereksiz hata bastırması yapılmaz.
+python_version = "3.13"
+files = ["src"]
+ignore_missing_imports = true
+warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
