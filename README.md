@@ -9,6 +9,7 @@ yönlendiren ve onaylanmış sonucu JSON olarak dışa aktaran, insan denetimli 
 - Teknik karar günlüğü: [`docs/DECISIONS.md`](docs/DECISIONS.md)
 - Extraction şeması (DRAFT): [`docs/SCHEMA.md`](docs/SCHEMA.md)
 - Evaluation metodolojisi (DRAFT): [`docs/EVALUATION.md`](docs/EVALUATION.md)
+- Veri toplama ve şema review: [`docs/DATA_COLLECTION.md`](docs/DATA_COLLECTION.md)
 
 Bu depo, ilk backend iskeletini içerir. Extraction, validation, human review ve
 diğer yetenekler ilgili geliştirme aşamalarında eklenecektir.
