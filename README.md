@@ -7,6 +7,8 @@ yönlendiren ve onaylanmış sonucu JSON olarak dışa aktaran, insan denetimli 
 
 - Ürün tanımı ve MVP sınırları: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md)
 - Teknik karar günlüğü: [`docs/DECISIONS.md`](docs/DECISIONS.md)
+- Extraction şeması (DRAFT): [`docs/SCHEMA.md`](docs/SCHEMA.md)
+- Evaluation metodolojisi (DRAFT): [`docs/EVALUATION.md`](docs/EVALUATION.md)
 
 Bu depo, ilk backend iskeletini içerir. Extraction, validation, human review ve
 diğer yetenekler ilgili geliştirme aşamalarında eklenecektir.
@@ -22,6 +24,24 @@ compose.yaml     PostgreSQL geliştirme veritabanı (yalnızca DB servisi)
 
 > `frontend/` klasörü, human review geliştirme aşamasında oluşturulacaktır
 > (bkz. `docs/DECISIONS.md`, D-001).
+
+## Veri gizliliği
+
+Bu depo **public**'tir. Gerçek faturalar VKN/TCKN, şirket unvanı, adres ve ticari
+tutarlar gibi hassas bilgiler içerebilir. Bu nedenle:
+
+- **Gerçek belgeler ve ground-truth label dosyaları repoya commit edilmez.** Bunlar
+  yalnızca lokal veya private storage'da tutulur.
+- Bu karar, **gizlilik ve KVKK risklerini azaltmak** içindir (hukuki bir uygunluk
+  garantisi değil, bilinçli bir risk azaltma tercihidir).
+- **Testler yalnızca sentetik veya güvenli biçimde anonimleştirilmiş fixture** kullanır;
+  gerçek fatura içeriği içermez.
+- **Lokal veri klasörleri `.gitignore` ile dışlanır** (ör. `data/raw/`, `data/private/`,
+  `datasets/raw/`, `*.local.pdf`).
+- **`.env`, API anahtarları ve credential bilgileri commit edilmez** (yalnızca
+  `.env.example` bulunur).
+- **Dataset'in repoda bulunmaması bilinçli bir tasarım kararıdır**, eksiklik değildir
+  (bkz. `docs/EVALUATION.md` ve `docs/DECISIONS.md`, D-029).
 
 ## Gereksinimler
 
