@@ -89,6 +89,11 @@ data/private/
 │   └── originals/          # gerçek freeze candidate PDF'leri (lokal, ignored)
 ├── challenge_set/
 │   └── originals/          # gerçek challenge PDF'leri (lokal, ignored)
+├── synthetic_examples/     # sentetik destek seti (bkz. §11)
+│   ├── originals/
+│   ├── inventory/
+│   │   └── synthetic_inventory.csv
+│   └── review/
 ├── inventory/
 │   ├── freeze_inventory.csv
 │   └── challenge_inventory.csv
@@ -218,6 +223,79 @@ Freeze kriterleri **extraction accuracy'ye bağlı değildir** ve `docs/EVALUATI
 6. Yalnızca **anonim kategoriler ve toplamlar** public rapora aktarılır.
 7. Elde edilen bulgularla schema **freeze veya revizyon** kararı verilir
    (ayrı bir commit ile; bkz. `docs/EVALUATION.md` §8).
+
+---
+
+## 11. Sentetik destek seti
+
+Gerçek belge setlerinden (§2) **ayrı** tutulan, lokal ve ignored bir yardımcı settir.
+Amacı, gerçek belge toplama süreci beklenmeden parser ve şema geliştirmesini
+ilerletebilmektir.
+
+### 11.1 Amaç ve sınırlar
+
+- Sentetik örnekler gerçek freeze belgelerinin **yerine geçmez.**
+- **Schema freeze sayısına dahil edilmez** (freeze kriterleri: `docs/EVALUATION.md` §8).
+- **Extraction accuracy** (`docs/EVALUATION.md` §1 seviye C) veya **processing
+  reliability** (§1 seviye D) metriklerine **dahil edilmez.**
+- Kullanım alanı yalnızca şunlardır:
+  - **Parser format coverage** (`docs/EVALUATION.md` §1 seviye B),
+  - **Schema gap keşfi,**
+  - **Özel durum (edge case) geliştirmesi,**
+  - **Regresyon testi tasarımı.**
+- Gerçek ve sentetik sonuçlar **hiçbir raporda tek tabloda birleştirilmez;** ayrı
+  bölüm ve ayrı tablo olarak sunulur.
+- Her sentetik örneğin **kaynağı (`source_method`) ve senaryosu (`scenario_name`)
+  envanterde açıkça kaydedilir.**
+- **Aynı GİB/XSLT layout'undan üretilen farklı senaryolar layout çeşitliliği
+  sayılmaz** (§6 ile tutarlı; bu örnekler aynı `layout_family` değerini taşır).
+- Sentetik içerikte **gerçek ad, adres, VKN/TCKN, e-posta, telefon veya gerçek şirket
+  verisi kullanılmaz** (§7 ile tutarlı).
+
+### 11.2 Lokal klasör yapısı ve ID
+
+Sentetik örnekler yalnızca lokalde, `data/private/synthetic_examples/` altında tutulur
+ve `.gitignore` ile dışlanmıştır (bkz. §4). Public repoda yalnızca boş şablon bulunur
+(`docs/templates/synthetic_inventory_template.csv`).
+
+Anonim ID biçimi: `SY-001`, `SY-002`, … Freeze (`FZ-`) ve challenge (`CH-`)
+serilerinden **ayrı bir seridir** ve onlarla birlikte sayılmaz.
+
+### 11.3 Envanter alanları ve değer kümeleri
+
+`synthetic_inventory.csv` alanları (§5.1'den farklı olanlar):
+
+- `scenario_name`: senaryonun kısa ve anonim adı (bkz. §11.4).
+- `source_method`: `gib_test_portal` / `official_ubl_example` / `locally_generated`.
+- `discount_level`: `none` / `invoice` / `line` / `both`.
+- `intended_test_purpose`: örneğin hangi geliştirme veya test amacı için üretildiği
+  (ör. `parser_format_coverage`, `regression_fixture`).
+- `generation_date`: üretim tarihi (ISO-8601).
+- `included_in_schema_freeze`: **her zaman `false`.**
+- `included_in_accuracy_metrics`: **her zaman `false`.**
+- `text_layer_present`, `line_items_present`, `multiple_vat_rates_present`,
+  `vat_exemption_present`, `withholding_present`, `additional_tax_present`:
+  boolean → `yes` / `no` / `unknown` (§5.1 ile aynı değer kümesi).
+- `document_type`, `layout_family`, `language`, `currency`: §5.1 ile aynı anlamda.
+- `notes`: **gerçek şirket, kişi, VKN, TCKN, adres, fatura numarası veya tutar
+  içermez.**
+
+Bu envanterde `local_filename` kolonu **yoktur;** sentetik dosyalar gerçek belge
+değildir ve gizlenmesi gereken bir kaynak dosya adı taşımaz.
+
+### 11.4 İlk hedef senaryolar
+
+| Senaryo | `scenario_name` |
+| --- | --- |
+| Standart tek satırlı satış faturası | `standard_single_line` |
+| Çok satırlı standart fatura | `standard_multi_line` |
+| Birden fazla KDV oranı | `multiple_vat_rates` |
+| Fatura seviyesinde iskonto | `invoice_level_discount` |
+| Satır seviyesinde iskonto | `line_level_discount` |
+| KDV istisnalı veya muafiyetli fatura | `vat_exemption` |
+
+> Bunlar yalnızca **başlangıç senaryolarıdır;** liste kapalı değildir. Parser veya
+> şema geliştirmesi sırasında yeni senaryolar eklenebilir.
 
 ---
 
