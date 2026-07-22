@@ -65,10 +65,11 @@ Ek kural: `value` non-None **ancak ve ancak** `status == ok` olduğunda.
 
 - **Yapısal invariant** (bu şema): `raw`/`value`/`status` üçlüsünün tutarlılığı. Örn. `ok` iken
   `value` boş olamaz. Modelin var olabilmesi için gereken kurallar.
-- **Business validation** (Aşama 3, bu şemada YOK): Alanlar arası matematik ve mantık. Örn.
+- **Business validation** (bu şemada YOK): Alanlar arası matematik ve mantık. Örn.
   `satir_tutari == miktar * birim_fiyat`, `genel_toplam == ara_toplam + kdv_toplam`, VKN
   checksum, tarih makullüğü. Bunlar deterministik doğrulama katmanına aittir; şema/parser
-  katmanında **bulunmaz**.
+  katmanında **bulunmaz**. Uygulanan kural kümesi için bkz. [`VALIDATION.md`](VALIDATION.md)
+  (ruleset 0.1).
 
 ---
 
@@ -90,8 +91,9 @@ bulunmaz** (bunlar ileride ingestion/persistence katmanına aittir).
 ## 3. Header alanları (9 alan)
 
 Her alan `FieldValue[...]` sarmalayıcısıyla modelde **her zaman bulunur**; belgede yoksa
-`status=missing` ile temsil edilir. "Kritik" işareti, ilgili alanın Aşama 3 validation'ına
-girmesi beklendiğini gösterir ve **geçicidir** (kesin kritik küme Aşama 3'te belirlenir).
+`status=missing` ile temsil edilir. "Kritik" işareti, ilgili alanın validation'a girmesinin
+beklendiğini gösterir. Fiilen kural uygulanan alanların kesin listesi için bkz.
+[`VALIDATION.md`](VALIDATION.md) §3 kural kataloğu.
 
 > Alan adları kanonik kontrat adlarıdır. Özellikle `alici_vkn_tckn`, alanın hem 10 haneli VKN
 > hem 11 haneli TCKN taşıyabildiğini yansıtır (bkz. §6).
@@ -241,7 +243,8 @@ kelimesi, ön ek para birimi.
 
 - **Belge türü alanı yoktur** (v0.1'de fatura tipi: satış/iade vb. modellenmez).
 - **Kağıt vs e-Fatura numara formatı** kesin olarak ayrılamaz; `fatura_no` serbest `str`'dir.
-- **Validation kuralları Aşama 3'e aittir**; bu şema/parser katmanında hiçbir business kural yoktur.
+- **Validation kuralları ayrı bir katmandadır** ([`VALIDATION.md`](VALIDATION.md), ruleset 0.1);
+  bu şema/parser katmanında hiçbir business kural yoktur.
 - **İskontolu veya karmaşık satır yapıları** v0.1 kapsamını aşabilir (yalnızca beş LineItem alanı).
 - **Şema henüz gerçek faturalarla doğrulanmamıştır** (DRAFT).
 - **Float "bypass" durumu (çözüldü — bilinen teknik not):** Domain modellerinde float sızıntısı

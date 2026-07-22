@@ -8,6 +8,7 @@ yönlendiren ve onaylanmış sonucu JSON olarak dışa aktaran, insan denetimli 
 - Ürün tanımı ve MVP sınırları: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md)
 - Teknik karar günlüğü: [`docs/DECISIONS.md`](docs/DECISIONS.md)
 - Extraction şeması (DRAFT): [`docs/SCHEMA.md`](docs/SCHEMA.md)
+- Validation kuralları (ruleset 0.1): [`docs/VALIDATION.md`](docs/VALIDATION.md)
 - Evaluation metodolojisi (DRAFT): [`docs/EVALUATION.md`](docs/EVALUATION.md)
 - Veri toplama ve şema review: [`docs/DATA_COLLECTION.md`](docs/DATA_COLLECTION.md)
 
