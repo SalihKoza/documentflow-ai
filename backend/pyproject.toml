@@ -10,6 +10,10 @@ dependencies = [
     "alembic>=1.13",
     "psycopg[binary]>=3.2",
     "pydantic-settings>=2.4",
+    # V1.0 ingestion: PDF sayfa sayisi ve metin katmani kontrolu. Saf Python,
+    # bagimliliksiz, MIT. pdfplumber (pdfminer.six + Pillow zinciri) ve PyMuPDF
+    # (AGPL + C eklentisi) bu tek is icin gereksiz agir.
+    "pypdf>=6.0",
 ]
 
 [dependency-groups]

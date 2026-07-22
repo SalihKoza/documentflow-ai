@@ -8,12 +8,19 @@ yönlendiren ve onaylanmış sonucu JSON olarak dışa aktaran, insan denetimli 
 - Ürün tanımı ve MVP sınırları: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md)
 - Teknik karar günlüğü: [`docs/DECISIONS.md`](docs/DECISIONS.md)
 - Extraction şeması (DRAFT): [`docs/SCHEMA.md`](docs/SCHEMA.md)
+- Extraction sözleşmesi (sağlayıcı bağımsız): [`docs/EXTRACTION.md`](docs/EXTRACTION.md)
 - Validation kuralları (ruleset 0.1): [`docs/VALIDATION.md`](docs/VALIDATION.md)
+- Deterministik review flagging: [`docs/FLAGGING.md`](docs/FLAGGING.md)
 - Evaluation metodolojisi (DRAFT): [`docs/EVALUATION.md`](docs/EVALUATION.md)
 - Veri toplama ve şema review: [`docs/DATA_COLLECTION.md`](docs/DATA_COLLECTION.md)
 
-Bu depo, ilk backend iskeletini içerir. Extraction, validation, human review ve
-diğer yetenekler ilgili geliştirme aşamalarında eklenecektir.
+Depoda şu an bulunanlar: extraction şeması ve Türkçe parser'lar, deterministik
+validation kuralları, sağlayıcıdan bağımsız extraction sözleşmesi, V1.0 PDF
+ingestion kontrolleri ve deterministik review flagging.
+
+**Henüz yok:** gerçek bir LLM sağlayıcı adapter'ı (model kararı bekliyor), API
+uçları, kalıcı veri katmanı ve human review arayüzü. Bu nedenle uçtan uca ölçülmüş
+bir doğruluk, gecikme veya maliyet **iddiası bulunmamaktadır**.
 
 ## Proje yapısı
 
