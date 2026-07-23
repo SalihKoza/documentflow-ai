@@ -14,6 +14,12 @@ dependencies = [
     # bagimliliksiz, MIT. pdfplumber (pdfminer.six + Pillow zinciri) ve PyMuPDF
     # (AGPL + C eklentisi) bu tek is icin gereksiz agir.
     "pypdf>=6.0",
+    # Review ekrani icin server-rendered HTML. Autoescape varsayilan olarak
+    # aciktir: fatura metni guvenilmeyen girdidir ve XSS'e karsi temel savunma
+    # budur. (Mako alembic'e aittir ve autoescape varsayilani yoktur.)
+    "jinja2>=3.1",
+    # FastAPI dosya yukleme (multipart/form-data) icin zorunlu.
+    "python-multipart>=0.0.9",
 ]
 
 [dependency-groups]

@@ -5,7 +5,13 @@ importu icermez (testle kilitli).
 """
 
 from documentflow.extraction.fake import FakeExtractor, RecordedExtractor, fake_metadata
-from documentflow.extraction.mapping import WireContractError, build_result, wire_to_invoice
+from documentflow.extraction.mapping import (
+    UnknownFieldPathError,
+    WireContractError,
+    build_result,
+    parse_field_value,
+    wire_to_invoice,
+)
 from documentflow.extraction.protocol import ExtractorProtocol
 from documentflow.extraction.types import (
     DEFAULT_SCHEMA_VERSION,
@@ -31,6 +37,7 @@ __all__ = [
     "FakeExtractor",
     "ProviderMetadata",
     "RecordedExtractor",
+    "UnknownFieldPathError",
     "WireContractError",
     "WireField",
     "WireHeader",
@@ -39,5 +46,6 @@ __all__ = [
     "WireLineItems",
     "build_result",
     "fake_metadata",
+    "parse_field_value",
     "wire_to_invoice",
 ]

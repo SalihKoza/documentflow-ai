@@ -74,6 +74,34 @@ _LINE_KINDS: dict[str, _Kind] = {
 }
 
 
+class UnknownFieldPathError(ValueError):
+    """Verilen alan yolu semada tanimli degil."""
+
+
+def _kind_for_path(field_path: str) -> _Kind:
+    """`header.<alan>` / `kalemler[<i>].<alan>` yolundan cevrim turunu bulur."""
+    head, _, name = field_path.rpartition(".")
+    if head == "header":
+        kind = _HEADER_KINDS.get(name)
+    elif head.startswith("kalemler[") and head.endswith("]"):
+        kind = _LINE_KINDS.get(name)
+    else:
+        kind = None
+    if kind is None:
+        raise UnknownFieldPathError(field_path)
+    return kind
+
+
+def parse_field_value(field_path: str, text: str) -> str | date | Decimal | None:
+    """Bir alan yolu icin metni hedef tipe cevirir; cevrilemezse None.
+
+    Cikarim ciktisini cevirirken kullanilan mantigin AYNISI insan duzeltmelerinde
+    de kullanilsin diye disari acilir: duzeltilen bir deger, modelin urettigi bir
+    deger ile ayni parser'dan gecer.
+    """
+    return _parse_value(text, _kind_for_path(field_path))
+
+
 def _parse_value(value: str | None, kind: _Kind) -> str | date | Decimal | None:
     """Metni hedef tipe cevirir; cevrilemezse None (istisna degil, D-020)."""
     if value is None:

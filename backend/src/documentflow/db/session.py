@@ -1,10 +1,10 @@
 """Veritabanı bağlantısı ve oturum yönetimi (D-005, D-006).
 
-Senkron SQLAlchemy 2 engine ve session factory. Bu aşamada ORM modeli/tablosu
-tanımlanmaz; yalnızca çekirdek altyapı hazırlanır. `create_engine` tembeldir:
+Senkron SQLAlchemy 2 engine ve session factory. `create_engine` tembeldir:
 gerçek bağlantı ancak ilk kullanımda açılır, bu nedenle bu modülü import etmek
-çalışan bir PostgreSQL gerektirmez. Declarative taban `documentflow.db.base`
-içinde tanımlıdır.
+çalışan bir PostgreSQL gerektirmez — çekirdek testler veritabanısız çalışmaya
+devam eder. Declarative taban `documentflow.db.base`, modeller
+`documentflow.db.models` içindedir.
 """
 
 from collections.abc import Iterator

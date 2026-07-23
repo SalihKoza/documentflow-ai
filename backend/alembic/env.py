@@ -2,7 +2,7 @@
 
 Veritabanı URL'i uygulama Settings'inden (D-011) okunur; alembic.ini içinde
 gizli bilgi tutulmaz. `target_metadata`, uygulama Base'inin metadata'sına
-bağlanır. Bu aşamada tanımlı model/tablo yoktur.
+bağlanır.
 """
 
 from logging.config import fileConfig
@@ -11,6 +11,10 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from documentflow.core.config import get_settings
+
+# Modellerin import edilmesi ZORUNLUDUR: aksi hâlde `Base.metadata` boş kalır ve
+# autogenerate/check tüm tabloları "silinmiş" sanır.
+from documentflow.db import models  # noqa: F401  (yan etki için import)
 from documentflow.db.base import Base
 
 config = context.config

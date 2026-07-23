@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}İnceleme #{{ run.id }} — DocumentFlow AI{% endblock %}
+
+{% block content %}
+<h1>İnceleme — çıkarım #{{ run.id }}</h1>
+
+<p class="muted">
+  Belge #{{ run.document_id }} ·
+  sağlayıcı <code>{{ run.provider }}</code> ·
+  model <code>{{ run.model }}</code> ·
+  prompt <code>{{ run.prompt_version }}</code> ·
+  durum <code>{{ run.status }}</code>
+  {%- if run.latency_ms is not none %} · {{ run.latency_ms }} ms{% endif %}
+</p>
+
+{% if extraction_failed %}
+  <p class="blocking">
+    Çıkarım başarısız (<code>{{ run.status }}</code>); üzerinde çalışılacak fatura yok.
+  </p>
+  {% if run.error_detail %}<p class="muted"><code>{{ run.error_detail }}</code></p>{% endif %}
+{% else %}
+
+  {% if approval %}
+    <p class="banner" id="approval-state">
+      <strong>Onaylandı</strong> — {{ approval.approved_at.strftime("%Y-%m-%d %H:%M") }},
+      {{ approval.correction_count }} düzeltme ile.
+    </p>
+    {# Export yan etkilidir (export_records satiri + audit olayi): link degil,
+       POST formu. Boylece prefetch veya tekrar tiklama kazara export uretmez. #}
+    <form method="post" action="/runs/{{ run.id }}/export" class="actions">
+      <button type="submit">Onaylı JSON export</button>
+    </form>
+  {% else %}
+    <p id="approval-state" class="muted">Henüz onaylanmadı.</p>
+  {% endif %}
+
+  <h2>Deterministik sinyaller ({{ flags|length }})</h2>
+  <p class="muted">
+    LLM confidence kullanılmaz; sinyaller alan durumları ve validation
+    kurallarından türetilir. Aşağıdakiler düzeltmeler uygulanmış <em>güncel</em>
+    durumu gösterir; çıkarımın orijinal bulguları audit için saklanır.
+  </p>
+  {% if flags %}
+  <table id="flags">
+    <thead>
+      <tr><th>Alan</th><th>Sinyal</th><th>Ciddiyet</th><th>Kural</th><th>Neden</th><th>Öneri</th></tr>
+    </thead>
+    <tbody>
+    {% for flag in flags %}
+      <tr>
+        <td><code>{{ flag.field_path }}</code></td>
+        <td><code>{{ flag.signal_code.value }}</code></td>
+        <td class="{{ flag.severity.value }}">{{ flag.severity.value }}</td>
+        <td>{{ flag.originating_rule or "—" }}</td>
+        <td>{{ flag.reason }}</td>
+        <td><code>{{ flag.suggested_action.value }}</code></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p id="flags">Sinyal yok.</p>
+  {% endif %}
+
+  <h2>Alanlar</h2>
+  <table id="fields">
+    <thead>
+      <tr><th>Alan</th><th>Ham metin</th><th>Değer</th><th>Durum</th><th>Sinyal</th></tr>
+    </thead>
+    <tbody>
+    {% for row in rows %}
+      <tr data-field-path="{{ row.path }}">
+        <td><code>{{ row.path }}</code></td>
+        <td class="muted">{{ row.raw or "—" }}</td>
+        <td>{{ row.value if row.value is not none else "—" }}</td>
+        <td>{{ row.field_status }}</td>
+        <td>
+          {% for flag in row.flags %}
+            <span class="{{ flag.severity.value }}">{{ flag.signal_code.value }}</span>{% if not loop.last %}, {% endif %}
+          {% else %}—{% endfor %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  {% if not approval %}
+    <h2>Alan düzelt</h2>
+    <form method="post" action="/runs/{{ run.id }}/corrections" class="actions">
+      <select name="field_path" required>
+        {% for row in rows %}
+          <option value="{{ row.path }}">{{ row.path }}</option>
+        {% endfor %}
+      </select>
+      <input type="text" name="new_value" placeholder="Yeni değer (ör. 3.600,00)" required>
+      <button type="submit">Düzelt</button>
+    </form>
+
+    <form method="post" action="/runs/{{ run.id }}/approve" class="actions">
+      <button type="submit">
+        Onayla{% if blocking_count %} ({{ blocking_count }} blocking sinyale rağmen){% endif %}
+      </button>
+    </form>
+  {% endif %}
+
+  {% if corrections %}
+    <h2>Düzeltmeler ({{ corrections|length }})</h2>
+    <table id="corrections">
+      <thead>
+        <tr><th>Alan</th><th>Önce</th><th>Sonra</th><th>Zaman</th></tr>
+      </thead>
+      <tbody>
+      {% for correction in corrections %}
+        <tr>
+          <td><code>{{ correction.field_path }}</code></td>
+          <td class="muted">
+            {{ correction.before_value if correction.before_value is not none else "—" }}
+            ({{ correction.before_status }})
+          </td>
+          <td>{{ correction.after_value }} ({{ correction.after_status }})</td>
+          <td class="muted">{{ correction.corrected_at.strftime("%Y-%m-%d %H:%M") }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endif %}
+
+<h2>Audit</h2>
+<table id="audit">
+  <thead><tr><th>#</th><th>Olay</th><th>Ayrıntı</th></tr></thead>
+  <tbody>
+  {% for event in events %}
+    <tr>
+      <td>{{ event.id }}</td>
+      <td><code>{{ event.event_type }}</code></td>
+      <td class="muted"><code>{{ event.detail }}</code></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p class="muted"><a href="/runs/{{ run.id }}/audit">Audit JSON</a></p>
+{% endblock %}

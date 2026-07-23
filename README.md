@@ -11,16 +11,21 @@ yönlendiren ve onaylanmış sonucu JSON olarak dışa aktaran, insan denetimli 
 - Extraction sözleşmesi (sağlayıcı bağımsız): [`docs/EXTRACTION.md`](docs/EXTRACTION.md)
 - Validation kuralları (ruleset 0.1): [`docs/VALIDATION.md`](docs/VALIDATION.md)
 - Deterministik review flagging: [`docs/FLAGGING.md`](docs/FLAGGING.md)
+- Uçtan uca akış ve ürün yüzeyi: [`docs/WORKFLOW.md`](docs/WORKFLOW.md)
 - Evaluation metodolojisi (DRAFT): [`docs/EVALUATION.md`](docs/EVALUATION.md)
 - Veri toplama ve şema review: [`docs/DATA_COLLECTION.md`](docs/DATA_COLLECTION.md)
 
 Depoda şu an bulunanlar: extraction şeması ve Türkçe parser'lar, deterministik
 validation kuralları, sağlayıcıdan bağımsız extraction sözleşmesi, V1.0 PDF
-ingestion kontrolleri ve deterministik review flagging.
+ingestion kontrolleri, deterministik review flagging, kalıcı veri katmanı ve
+uçtan uca çalışan bir review yüzeyi (yükle → çıkar → doğrula → düzelt → onayla →
+JSON export → audit).
 
-**Henüz yok:** gerçek bir LLM sağlayıcı adapter'ı (model kararı bekliyor), API
-uçları, kalıcı veri katmanı ve human review arayüzü. Bu nedenle uçtan uca ölçülmüş
-bir doğruluk, gecikme veya maliyet **iddiası bulunmamaktadır**.
+> **Henüz gerçek çıkarım yapılmamaktadır.** LLM sağlayıcı ve model seçimi
+> bilinçli olarak ertelendi (D-049); uygulama `recorded` extractor ile çalışır ve
+> yüklenen PDF ne olursa olsun aynı sentetik faturayı döndürür. Review ekranı bunu
+> görünür bir uyarıyla bildirir. Bu nedenle **ölçülmüş bir doğruluk, gecikme veya
+> maliyet iddiası bulunmamaktadır.**
 
 ## Proje yapısı
 

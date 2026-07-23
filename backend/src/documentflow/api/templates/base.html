@@ -1,0 +1,45 @@
+{# Minimal taban sablon. Jinja2 autoescape aciktir: fatura metni guvenilmeyen
+   girdidir ve sayfaya oldugu gibi basilmaz. #}
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}DocumentFlow AI{% endblock %}</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 1.5rem;
+           line-height: 1.5; max-width: 70rem; }
+    h1, h2 { line-height: 1.2; }
+    h1 { font-size: 1.4rem; }
+    h2 { font-size: 1.1rem; margin-top: 2rem; }
+    table { border-collapse: collapse; width: 100%; margin: 0.5rem 0 1rem; }
+    th, td { border: 1px solid #8884; padding: 0.35rem 0.5rem; text-align: left;
+             vertical-align: top; font-size: 0.9rem; }
+    th { font-weight: 600; }
+    code { font-family: ui-monospace, monospace; font-size: 0.85em; }
+    .banner { border: 1px solid #b8860b; background: #b8860b22; padding: 0.6rem 0.8rem;
+              margin-bottom: 1rem; border-radius: 4px; font-size: 0.9rem; }
+    .blocking { color: #b00020; font-weight: 600; }
+    .review { color: #8a6d00; font-weight: 600; }
+    .muted { opacity: 0.7; }
+    .actions { margin: 1rem 0; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    input, select, button { font: inherit; padding: 0.3rem 0.4rem; }
+    nav a { margin-right: 1rem; }
+  </style>
+</head>
+<body>
+  <nav><a href="/">&larr; Belgeler</a></nav>
+
+  {% if demo %}
+    <p class="banner">
+      <strong>Demo modu.</strong> Extraction sağlayıcısı <code>recorded</code>:
+      gerçek bir model çağrısı yapılmaz ve yüklenen PDF ne olursa olsun aynı
+      sentetik fatura döndürülür. Buradaki alan değerleri belgeden çıkarılmış
+      <em>değildir</em>.
+    </p>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</body>
+</html>

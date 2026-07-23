@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Belgeler — DocumentFlow AI{% endblock %}
+
+{% block content %}
+<h1>Fatura yükle</h1>
+
+<form method="post" action="/documents" enctype="multipart/form-data">
+  <input type="file" name="upload" accept="application/pdf" required>
+  <button type="submit">Yükle ve çıkar</button>
+</form>
+<p class="muted">
+  V1.0 kapsamı: metin katmanı bulunan dijital PDF. Taranmış belge, görsel ve
+  şifreli PDF burada reddedilir.
+</p>
+
+<h2>Belgeler</h2>
+{% if documents %}
+<table>
+  <thead>
+    <tr>
+      <th>#</th><th>Dosya</th><th>Durum</th><th>Sayfa</th><th>Yüklenme</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for document in documents %}
+    <tr>
+      <td>{{ document.id }}</td>
+      <td>{{ document.original_filename or "—" }}</td>
+      <td>
+        {% if document.accepted %}
+          kabul edildi
+        {% else %}
+          <span class="blocking">reddedildi</span>
+          <code>{{ document.rejection_reason }}</code>
+        {% endif %}
+      </td>
+      <td>{{ document.page_count if document.page_count is not none else "—" }}</td>
+      <td>{{ document.uploaded_at.strftime("%Y-%m-%d %H:%M") }}</td>
+      <td>
+        {% if latest_run.get(document.id) %}
+          <a href="/runs/{{ latest_run[document.id] }}">İncele</a>
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">Henüz belge yok.</p>
+{% endif %}
+{% endblock %}
