@@ -7,7 +7,7 @@ yönlendiren ve onaylanmış sonucu JSON olarak dışa aktaran, insan denetimli 
 
 - Ürün tanımı ve MVP sınırları: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md)
 - Teknik karar günlüğü: [`docs/DECISIONS.md`](docs/DECISIONS.md)
-- Extraction şeması (DRAFT): [`docs/SCHEMA.md`](docs/SCHEMA.md)
+- Extraction şeması (v0.1 FROZEN): [`docs/SCHEMA.md`](docs/SCHEMA.md)
 - Extraction sözleşmesi (sağlayıcı bağımsız): [`docs/EXTRACTION.md`](docs/EXTRACTION.md)
 - Validation kuralları (ruleset 0.1): [`docs/VALIDATION.md`](docs/VALIDATION.md)
 - Deterministik review flagging: [`docs/FLAGGING.md`](docs/FLAGGING.md)
@@ -26,6 +26,22 @@ JSON export → audit).
 > yüklenen PDF ne olursa olsun aynı sentetik faturayı döndürür. Review ekranı bunu
 > görünür bir uyarıyla bildirir. Bu nedenle **ölçülmüş bir doğruluk, gecikme veya
 > maliyet iddiası bulunmamaktadır.**
+
+### Şema durumu
+
+Extraction şeması v0.1 **2026-07-23'te donduruldu** (D-058). Freeze, **3 kapsam içi
+gerçek belge** üzerinde yapılan anonim review'a dayanır: bu belgelerdeki dokuz başlık
+alanı ve beş kalem alanının tamamı mevcut şemayla kayıpsız temsil edilebildi.
+
+Bunun ne olmadığı da açık olsun:
+
+- **Bu bir doğruluk (accuracy) kanıtı değildir.** Freeze, "şema gerçek belgeleri temsil
+  edebiliyor mu" sorusunun cevabıdır; "model ne kadar doğru çıkarıyor" sorusunun değil.
+- **N=3 dış geçerlilik sağlamaz.** Üç belge de tek sayfalı, tek satırlı ve tek KDV
+  oranlıdır; çok satırlı, çoklu oranlı veya iskontolu yapılar gözlenmemiştir.
+- **Gerçek bir LLM sağlayıcı henüz uygulanmadı;** demo `recorded` extractor ile çalışır.
+- **Sentetik belgeler non-evaluative regression fixture'dır**, hiçbir doğruluk
+  hesabına girmez.
 
 ## Proje yapısı
 

@@ -57,7 +57,7 @@ CRUD katmanı da yoktur — sorgular ihtiyaç duyulan yerde açıkça yazılır.
 ### Neden `Invoice` JSONB olarak saklanıyor
 
 Normalize edilmiş kolonlar `FieldValue` üçlüsü nedeniyle alan başına üç kolon demek olurdu ve
-şema hâlâ DRAFT (D-021) — her şema değişikliği bir migration gerektirirdi. Snapshot'ın amacı
+şema o dönemde DRAFT'tı (D-021; artık D-058 ile frozen) — her şema değişikliği bir migration gerektirirdi. Snapshot'ın amacı
 **audit doğruluğudur**: çıkarımın o anki hâlini birebir korumak. Sorgulanabilirlik ihtiyacı
 doğarsa JSONB üzerinde indeks eklenebilir.
 

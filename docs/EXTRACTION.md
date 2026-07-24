@@ -2,7 +2,7 @@
 
 ```text
 Extraction contract: v0.1
-Schema version:      v0.1 (DRAFT — NOT FROZEN)
+Schema version:      v0.1 (FROZEN — 2026-07-23, D-058)
 Provider:            SEÇİLMEDİ (karar ertelendi)
 Status:              DRAFT
 ```
@@ -258,8 +258,8 @@ bir yere dağıtmamalıdır.
 - **Metin katmanı eşiği sezgiseldir.** Varsayılan 32 karakter; gerçek belge dağılımıyla
   ayarlanmalıdır.
 - **Çok sayfalı/çok belgeli akış yoktur** (MVP tek belge, PROJECT_BRIEF §7).
-- **Şema DRAFT'tır** (D-021): freeze'de alan adları değişirse `parse_failures` içindeki alan
-  yolları etkilenir.
+- **Şema FROZEN'dır** (D-058): freeze'de alan adları değişmediği için `parse_failures` içindeki
+  alan yolları da sabittir.
 
 ---
 

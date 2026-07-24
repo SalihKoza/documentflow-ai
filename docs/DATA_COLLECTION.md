@@ -1,8 +1,8 @@
 # DocumentFlow AI — Veri Toplama ve Schema Review İş Akışı
 
 ```text
-Schema version: v0.1
-Status: DRAFT — NOT FROZEN
+Schema version: v0.1 — FROZEN (2026-07-23, D-058)
+Status:         Aktif iş akışı belgesi
 ```
 
 Bu belge, schema v0.1'in gerçek Türkçe faturalar üzerinde **temsil gücünü (schema
@@ -34,13 +34,18 @@ etiketleme değildir (bkz. `docs/EVALUATION.md` §11).
 Schema v0.1'in **kapsam içi** gerçek belgeler üzerinde temsil gücünü değerlendirmek
 için kullanılır.
 
-- Hedef: **10–12 belge**
+- ~~Hedef: **10–12 belge**~~ → **tarihsel hedef; D-058 ile supersede edildi.**
+  Erişilebilir kapsam içi gerçek belge sayısı pratikte **3**'te kaldı ve freeze bu
+  N=3 üzerinde, gözlenen representability temelinde verildi.
+- **Gerçekleşen freeze seti: 3 belge** (`FZ-001`, `FZ-002`, `FZ-003`), 2026-07-23.
 - Türkçe
 - TRY
 - Text-layer dijital PDF (bkz. §6)
 - Ticari fatura
 - Line item içeren
-- Mümkün olduğunca **farklı görsel layout ailesi**
+- Mümkün olduğunca **farklı görsel layout ailesi** — gerçekleşen sette bu çeşitlilik
+  **sınırlıdır**: üçü de tek sayfalı, tek satırlı, tek KDV oranlı, tüketiciye kesilen
+  e-Arşiv faturasıdır.
 - Lokal/private saklanan
 
 ### 2.2 Challenge set
@@ -59,6 +64,18 @@ Challenge set:
 - **Extraction accuracy hesabına dahil edilmez.**
 - Yalnızca **kapsam kararlarını** (neyin bilinçli olarak dışarıda tutulduğunu)
   kanıtlamak için kullanılır.
+
+**Gerçekleşen challenge seti: 4 belge** (2026-07-23), anonim kategorileriyle:
+
+| ID | Kategori | v0.1 dışında kalma nedeni |
+| -- | -------- | ------------------------- |
+| `CH-001` | Çok sayfalı yapı | İki sayfalı belge; v0.1 tek sayfalı dar kapsamı hedefler |
+| `CH-002` | İstisna / tevkifat / iskonto | İstisna-muafiyet-tevkifat terimleri, düşük veya sıfır KDV oranı ve iskonto birlikte görülüyor; v0.1'de bu vergi yapıları ve iskonto alanı yok |
+| `CH-003` | Türkçe e-Arşiv düzeni dışı | Standart Türkçe başlık etiketleri (fatura no / fatura tarihi / VKN / KDV) bulunmuyor; yabancı sağlayıcı fatura yapısı |
+| `CH-004` | Çok sayfalı yapı | İki sayfalı belge |
+
+**Excluded set: 5 belge.** Bunlar ne freeze'e ne evaluation denominator'ına girer ve
+ayrıntılı analiz edilmez; yalnızca kapsam dışı oldukları kayıt altındadır.
 
 ---
 
@@ -183,6 +200,25 @@ satırı içermez.**
   kullanılmalıdır.
 - Bu doküman bir **hukuki uygunluk garantisi değildir.**
 
+### 7.1 Görsel redaksiyon güvenli DEĞİLDİR
+
+**Bir PDF'in üzerine siyah kutu çizmek veya metni görsel olarak kapatmak, text layer'ı
+silmez.** Belge görsel olarak redakte edilmiş görünür fakat gerçek değerler metin
+katmanında aynen durmaya devam eder ve herhangi bir metin çıkarıcı tarafından okunabilir.
+
+Bu, bu depoda **gözlenmiş bir durumdur**: görsel olarak redakte edilmiş bir kopyanın
+metin katmanı, redakte edilmemiş orijinaliyle **byte-identical** çıkmıştır (aynı
+SHA-256). Yani redaksiyon hiçbir bilgi kaldırmamıştı.
+
+Bu nedenle:
+
+- Görsel olarak redakte edilmiş belgeler **güvenli anonim kopya sayılmaz** ve öyle
+  kullanılmaz.
+- Bu tür dosyalar `excluded/unsafe_redaction/` altında, **lokal ve ignored** tutulur;
+  freeze veya evaluation setine **girmez**.
+- Bir belgenin gerçekten anonim olduğu, görsel görünümüne değil **çıkarılmış metnine**
+  bakılarak doğrulanır.
+
 ---
 
 ## 8. V1 kapsam ayrımı
@@ -208,7 +244,12 @@ Freeze kriterleri **extraction accuracy'ye bağlı değildir** ve `docs/EVALUATI
 4. LineItem yeterliliği
 
 > Coverage matrisi bu kriterleri ölçmek için kullanılan **yöntemdir;** ayrı bir freeze
-> kriteri değildir. Bu belge kapsamında şema **freeze edilmez** (`DRAFT — NOT FROZEN`).
+> kriteri değildir.
+
+**Durum:** şema 2026-07-23'te **frozen**'dır (D-058). Dört kriter, erişilebilir 3 kapsam
+içi gerçek belge üzerinde sağlandı. Başlangıçtaki 10–12 belgelik sayı hedefi
+uygulanabilir olmadığı için D-058 ile supersede edildi. Freeze bir **accuracy kanıtı
+değildir** ve N=3 dış geçerlilik sağlamaz.
 
 ---
 
@@ -302,6 +343,6 @@ değildir ve gizlenmesi gereken bir kaynak dosya adı taşımaz.
 ## İlgili belgeler
 
 - Evaluation metodolojisi: [`EVALUATION.md`](EVALUATION.md) (freeze kriterleri §8)
-- Şema kontratı: [`SCHEMA.md`](SCHEMA.md) (`DRAFT — NOT FROZEN`)
+- Şema kontratı: [`SCHEMA.md`](SCHEMA.md) (`v0.1 FROZEN`)
 - Ürün kapsamı (V1.0/V1.1/V1.2): [`../PROJECT_BRIEF.md`](../PROJECT_BRIEF.md) §4
 - Public şablonlar: [`templates/`](templates/)

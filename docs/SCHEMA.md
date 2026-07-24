@@ -2,7 +2,9 @@
 
 ```text
 Schema version: v0.1
-Status: DRAFT — NOT FROZEN
+Status:         FROZEN (2026-07-23)
+Freeze basis:   3 kapsam içi gerçek belge üzerinde gözlenen representability
+Freeze scope:   yalnızca dar V1.0 kapsamı
 ```
 
 Bu belge, faturadan çıkarılan yapılandırılmış verinin v0.1 şemasını (Pydantic modelleri ve
@@ -12,15 +14,47 @@ uygulamayı birebir açıklar.
 
 ## Durum ve sınırlar (ÖNEMLİ)
 
-- Şema **henüz gerçek Türkçe fatura örnekleriyle doğrulanmamıştır.**
-- **Ground-truth (referans) etiketleme BAŞLAMAMALIDIR.** Şema donmadan etiketlenen veri, şema
-  değişirse çöpe gider.
-- **Ham fatura toplama BAŞLAYABİLİR** (etiketleme olmadan). Toplanan belgeler yalnızca yerelde
-  tutulur.
+Şema **3 kapsam içi gerçek Türkçe fatura** üzerinde yapılan anonim review sonrası
+dondurulmuştur (D-058). Freeze'in ne olduğu ve **ne olmadığı** aşağıda açıktır.
+
+**Freeze neye dayanıyor:**
+
+- **Gözlenen representability.** Üç belgenin dokuz header alanının tamamı ve beş LineItem
+  alanının tamamı mevcut, insan tarafından okunabilir ve mevcut `FieldValue[raw, value, status]`
+  yapısıyla **kayıpsız** temsil edilebilir durumdaydı. Gözlenen hiçbir değer parse edilemeyip
+  `unreadable`'a düşmedi.
+- Freeze **extraction accuracy'ye dayanmaz** ve bir doğruluk kanıtı **değildir**.
+
+**Freeze neyi sağlamıyor:**
+
+- **N=3 dış geçerlilik (external validity) sağlamaz.** Üç belge de tek sayfalı, tek satırlı,
+  tüketiciye kesilen e-Arşiv faturasıdır ve tek KDV oranı taşır. Çok satırlı sıra korunumu,
+  çoklu KDV oranı ve layout çeşitliliği **gözlenememiştir.**
+- Ölçülmüş bir doğruluk, gecikme veya maliyet **iddiası yoktur.**
+- Sentetik örnekler freeze kanıtı **değildir**; regression fixture'dır.
+
+**v0.1 dışında kalan yapılar** (challenge set'te gözlendi, desteklenmiyor): sıfırdan farklı
+iskonto, istisna/muafiyet, tevkifat, çoklu veya sıfır KDV oranı, çok sayfalı belge, standart
+Türkçe e-Arşiv başlık düzenini taşımayan yabancı sağlayıcı faturaları.
+
+**Bilinen sınırlar:**
+
+- **Satır aritmetiğinde tolerance yoktur.** Karşılaştırmalar tam `Decimal` eşitliğidir. Birim
+  fiyatı ikiden fazla ondalık taşıyan ve satır tutarı yuvarlanmış bir belgede `ARITH-003`
+  **yuvarlama kaynaklı false positive** üretir; bu davranış gerçek veride gözlenmiştir (1/3).
+  Tolerance politikası ruleset 0.2'ye ertelenmiştir (D-059).
+- Parser Türkçe sayı konvansiyonunu (`.` binlik, `,` ondalık) **varsayar**. İngilizce biçimli
+  bir değer sessizce yanlış yorumlanır; bu bir kapsam sınırıdır (V1.0 = Türkçe fatura).
+  Gözlenen üç belgede böyle bir durum **yoktur**.
+- Tarih alanında yalnızca `GG.AA.YYYY` / `GG-AA-YYYY` / `GG/AA/YYYY` desteklenir. Saat eki
+  taşıyan veya ISO biçimli bir değer `unreadable` olur — sessizce yanlış tarih üretilmez.
 - **Gerçek faturalar public repoya EKLENMEZ.** Hassas belge ve dataset klasörleri `.gitignore`
   ile dışlanmıştır.
-- **Freeze (dondurma) kararı, ilerideki bir şema review adımında** gerçek örneklerle doğrulama
-  sonrası verilecektir. Bu belge bir freeze kaydı değildir.
+- **Ground-truth etiketleme artık başlayabilir** (şema donduğu için). Etiketleme model
+  çıktısından bağımsız hazırlanır; bkz. [`EVALUATION.md`](EVALUATION.md).
+
+**Yeniden değerlendirme:** yeni gerçek belgeler toplandığında v0.2 için gap analizi başlatılır.
+Freeze, kapsamı genişletmeyi değil, **mevcut dar kapsamı sabitlemeyi** amaçlar.
 
 ---
 
@@ -246,7 +280,9 @@ kelimesi, ön ek para birimi.
 - **Validation kuralları ayrı bir katmandadır** ([`VALIDATION.md`](VALIDATION.md), ruleset 0.1);
   bu şema/parser katmanında hiçbir business kural yoktur.
 - **İskontolu veya karmaşık satır yapıları** v0.1 kapsamını aşabilir (yalnızca beş LineItem alanı).
-- **Şema henüz gerçek faturalarla doğrulanmamıştır** (DRAFT).
+- **Şema yalnızca 3 kapsam içi gerçek fatura üzerinde temsil (representability) açısından
+  incelenip dondurulmuştur** (FROZEN, D-058); extraction accuracy **henüz ölçülmemiştir** ve
+  N=3 dış geçerlilik **sağlamaz**.
 - **Float "bypass" durumu (çözüldü — bilinen teknik not):** Domain modellerinde float sızıntısı
   **yoktur**. Bir `FieldValue[Numeric]` alanına float verildiğinde Pydantic (typed constructor,
   dict/JSON ve önceden yapılmış bir bare instance'ın modele enjekte edildiği yollar dahil) onu
@@ -258,12 +294,17 @@ kelimesi, ön ek para birimi.
   seviyesinde küçük bir kontrol eklenebilir; v0.1'de pratik risk sıfır olduğu için eklenmemiştir.
 - **Alan adlandırma (kanonik):** Header alan adları kanonik kontratla hizalanmıştır:
   `alici_vkn_tckn` (alan hem 10 haneli VKN hem 11 haneli TCKN taşıyabildiğinden veri kapsamını
-  tam ifade eder) ve `kdv_toplam`. Şema draft olduğu ve dış tüketici bulunmadığı için bu,
-  alias/deprecated alan olmadan doğrudan rename ile uygulanmıştır.
+  tam ifade eder) ve `kdv_toplam`. Rename yapıldığı sırada şema henüz draft olduğu ve dış
+  tüketici bulunmadığı için bu, alias/deprecated alan olmadan doğrudan rename ile uygulanmıştır.
 
 ---
 
 ## 7. Freeze öncesi yapılabilecekler / yapılamayacaklar
+
+> **Güncel durum (2026-07-23):** Şema artık **FROZEN**'dır (D-058); aşağıdaki tablo yalnızca
+> freeze öncesi rejimi **tarihsel** olarak kaydeder. Freeze verildiği için "frozen/locked ilan
+> etmek" ve ground-truth etiketleme artık **yapılabilir**; gerçek faturaları repoya eklememe
+> kuralı ise kalıcıdır.
 
 | Yapılabilir | Yapılamaz (freeze'e kadar) |
 | ----------- | -------------------------- |
@@ -272,4 +313,4 @@ kelimesi, ön ek para birimi.
 | Sentetik örneklerle test | Gerçek faturaları repoya eklemek |
 | Bu belgeyi güncellemek | Business validation kurallarını şemaya koymak |
 
-Freeze, gerçek örneklerle doğrulama yapan ayrı bir **şema review** adımında kararlaştırılacaktır.
+Freeze, gerçek örneklerle anonim **şema review** adımında **2026-07-23'te kararlaştırıldı** (D-058).

@@ -2,7 +2,7 @@
 
 ```text
 Ruleset version: 0.1
-Schema version:  v0.1 (DRAFT — NOT FROZEN)
+Schema version:  v0.1 (FROZEN — 2026-07-23, D-058)
 Status:          DRAFT
 ```
 
@@ -196,8 +196,8 @@ yüzden **uzunluğa göre** dispatch edilir:
 - **`ruleset_version`** kural kümesinin sürümüdür ve `Invoice.schema_version`'dan **bağımsızdır.**
   Kural eklenmesi/kaldırılması, bir kuralın anlamının veya severity'sinin değişmesi ya da
   `ALLOWED_KDV_RATES` kümesinin değişmesi bu sürümü artırır.
-- Şema v0.1 hâlâ **DRAFT**'tır (D-021). Şema freeze edildiğinde rule ID'ler değişmez; yalnızca
-  `field_path` değerleri alan adı değişikliklerinden etkilenebilir.
+- Şema v0.1 **FROZEN**'dır (D-058). Freeze'de alan adları değişmediği için rule ID'ler ve
+  `field_path` değerleri de değişmemiştir.
 
 ---
 
@@ -287,7 +287,7 @@ ayrıca doğrulanır.
 
 ## İlgili belgeler
 
-- Şema kontratı: [`SCHEMA.md`](SCHEMA.md) (`DRAFT — NOT FROZEN`)
+- Şema kontratı: [`SCHEMA.md`](SCHEMA.md) (`v0.1 FROZEN`)
 - Evaluation metodolojisi: [`EVALUATION.md`](EVALUATION.md)
 - Karar günlüğü: [`DECISIONS.md`](DECISIONS.md) (D-033…D-040 bu belgeyi kapsar)
 - Ürün kapsamı: [`PROJECT_BRIEF.md`](../PROJECT_BRIEF.md) §5, §7

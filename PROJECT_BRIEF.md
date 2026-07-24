@@ -154,7 +154,7 @@ Bu oranlar, küçük bir seed (başlangıç) veri seti üzerinde kullanılacak *
 
 Ölçüm ve raporlamada aşağıdaki ilkeler uygulanır:
 
-- 8–12 belgeli seed dataset sonuçları yalnızca **yön gösterici geliştirme ölçümleridir**.
+- Küçük seed dataset sonuçları (başlangıç hedefi 8–12 belge; pratikte erişilen N=3, D-058) yalnızca **yön gösterici geliştirme ölçümleridir**.
 - Bu sonuçlar, kanıtlanmış ürün performansı veya üretim seviyesi doğruluk iddiası olarak sunulmayacaktır.
 - Evaluation raporlarında **belge sayısı** ve **toplam alan örneği sayısı** birlikte gösterilecektir.
 - Her alan için **kaç örneğin değerlendirildiği** açıkça yazılacaktır.

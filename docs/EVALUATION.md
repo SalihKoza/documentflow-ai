@@ -1,8 +1,9 @@
 # DocumentFlow AI — Extraction Evaluation Metodolojisi
 
 ```text
-Status: DRAFT
-Schema version: v0.1
+Evaluation methodology: DRAFT (henüz ölçülmüş sonuç yok)
+Schema version:         v0.1 — FROZEN (2026-07-23, bkz. SCHEMA.md)
+Evaluation set size:    3 kapsam içi gerçek belge (directional only)
 ```
 
 Bu belge, extraction (veri çıkarma) çıktısının **nasıl ölçüleceğini**, schema freeze
@@ -16,6 +17,14 @@ metodoloji sözleşmesidir; **ölçülmüş sonuç raporu değildir.**
 - **Yüzdeler bir production performans iddiası değildir.** Yön gösterici hedefler (§10)
   bile üretim seviyesi garanti değildir.
 - **Küçük seed set sonuçları yalnızca yön göstericidir** (directional); genellenemez.
+- **Evaluation seti 3 gerçek belgedir (N=3).** Bu büyüklükte tek bir belge sonucu onlarca
+  puan oynatır; üretilecek her sayı **yalnızca yönseldir** ve production veya
+  generalizable bir doğruluk iddiası olarak sunulamaz.
+- **Sentetik belgeler hiçbir accuracy/performance denominator'ına girmez.** Onlar
+  non-evaluative regression fixture'dır.
+- **Challenge ve excluded belgeler evaluation setine girmez.** Challenge belgeler v0.1
+  kapsamı dışındaki yapıları temsil eder; kapsam dışı bir belgede ölçülen doğruluk
+  yanıltıcı olur.
 - **Her yüzde, ham sayılarla (pay/payda) birlikte raporlanır.** Örnek:
 
   ```text
@@ -388,7 +397,7 @@ reviewer bu aşamada zorunlu değildir.
 ```json
 {
   "labels_sha256": "<hash>",
-  "document_count": 12,
+  "document_count": 3,
   "schema_version": "v0.1",
   "created_at": "<ISO-8601 timestamp>"
 }
@@ -409,9 +418,8 @@ Sınırlar açıkça belirtilir:
 şema, düşük ölçülmüş doğrulukla bile doğru şekilde temsil edici olabilir; freeze,
 temsil edilebilirlik sorusudur.
 
-En az **10 temsilî, kapsam içi gerçek fatura** üzerinde **anonim schema review** yapılır
-(§9 coverage matrisi ile). v0.1 yalnızca şu **dört kriter** birlikte sağlandığında
-frozen olabilir:
+**Anonim schema review** (§9 coverage matrisi ile) kapsam içi gerçek faturalar üzerinde
+yapılır. v0.1 yalnızca şu **dört kriter** birlikte sağlandığında frozen olabilir:
 
 1. **Temsil edilebilirlik** — Belgelerde gözlenen her kritik bilgi, mevcut bir alanda ve
    mevcut veri tipiyle **kayıpsız** saklanabiliyor olmalı.
@@ -429,11 +437,25 @@ frozen olabilir:
 
 **Freeze kararı** şu üç kayıtla birlikte verilir:
 
-- `docs/SCHEMA.md` durum güncellemesi (`DRAFT — NOT FROZEN` → frozen)
+- `docs/SCHEMA.md` durum güncellemesi (`DRAFT — NOT FROZEN` → `FROZEN`; 2026-07-23'te yapıldı)
 - `docs/DECISIONS.md` kararı
 - Ayrı bir Git commit'i
 
-> Bu görevde şema **freeze edilmez.** Şema durumu `DRAFT — NOT FROZEN` olarak kalır.
+### Gerçekleşen freeze (2026-07-23)
+
+Şema **frozen**'dır (D-058). Erişilebilir kapsam içi gerçek belge sayısı **3**'te kaldığı
+için başlangıçtaki "en az 10 belge" hedefi uygulanabilir olmadı; freeze **gözlenen
+representability** temelinde verildi ve dört kriter bu üç belgede sağlandı. Ayrıntı:
+[`SCHEMA.md`](SCHEMA.md) ve D-058.
+
+> **Freeze ≠ evaluation.** Freeze, "şema gözlenen gerçek belgeleri kayıpsız temsil
+> edebiliyor mu" sorusunun cevabıdır. Extraction accuracy **ayrı bir sorudur** ve bu
+> belgede tanımlı yöntemle, freeze'den sonra bağımsız ground truth ile ölçülür. Freeze
+> hiçbir doğruluk iddiası taşımaz.
+>
+> **N=3 dış geçerlilik sağlamaz.** Üç belge de tek sayfalı, tek satırlı, tek KDV oranlı
+> ve aynı geniş aileden (tüketiciye kesilen e-Arşiv). Çok satırlı, çoklu oranlı veya
+> iskontolu yapılar **gözlenmemiştir**.
 
 ---
 
@@ -490,14 +512,18 @@ PROJECT_BRIEF §6/§10 ile hizalıdır:
 
 ### Seed set
 
-- Yaklaşık **8–12 temsilî belge.**
+- **Mevcut gerçek durum: 3 kapsam içi belge.** Başlangıçtaki 8–12 hedefi tarihsel bir
+  hedefti; erişilebilir kaynak 3'te kaldığı için uygulanabilir olmadı (D-058).
 - Amaç: schema ve pipeline problemlerini **erken keşfetmek** ve error category
   keşfi yapmak.
-- **Directional sonuç** üretir; production performansı **kanıtlamaz.**
+- **Directional sonuç** üretir; production performansı **kanıtlamaz.** N=3'te bu sınır
+  özellikle serttir: tek bir belge sonucu onlarca puan oynatabilir.
 
 ### Daha geniş evaluation seti
 
-- **Schema freeze sonrasında** etiketlenir.
+- **Schema freeze sonrasında** etiketlenir (freeze 2026-07-23'te verildi, D-058).
+- Ground truth **model çıktısından bağımsız** hazırlanır; annotator model çıktısını
+  referans almaz.
 - **Alan başına örnek sayısı** raporlanır.
 - Aynı ground truth seti, model/provider karşılaştırmalarında **korunur.**
 - Dataset ve schema sürümleri **kayıt altına alınır.**
@@ -537,6 +563,6 @@ Belge başına tahmini extraction maliyeti.
 
 ## İlgili belgeler
 
-- Şema kontratı: [`docs/SCHEMA.md`](SCHEMA.md) (`DRAFT — NOT FROZEN`)
+- Şema kontratı: [`docs/SCHEMA.md`](SCHEMA.md) (`v0.1 FROZEN`)
 - Karar günlüğü: [`docs/DECISIONS.md`](DECISIONS.md) (D-022…D-032 bu belgeyi kapsar)
 - Ürün kapsamı ve ölçüm notları: [`PROJECT_BRIEF.md`](../PROJECT_BRIEF.md) §6, §10
